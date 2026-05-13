@@ -1,0 +1,13 @@
+Artificial Intelligence (AI) is a field of computer science that focuses on creating systems capable of performing tasks that normally require human intelligence. These tasks include learning, reasoning, problem solving, understanding language, and recognizing images.
+
+Machine Learning is a subset of AI where models learn patterns from data instead of being explicitly programmed. Deep Learning is a more advanced branch of Machine Learning that uses neural networks with many layers.
+
+Neural Networks are inspired by the human brain and consist of interconnected nodes called neurons. They are widely used in image recognition, speech processing, and natural language understanding.
+
+Natural Language Processing (NLP) enables computers to understand and generate human language. Large Language Models (LLMs) such as GPT are examples of NLP systems trained on huge amounts of text data.
+
+AI is used in many real-world applications including recommendation systems, autonomous vehicles, medical diagnosis, fraud detection, and virtual assistants.
+
+Retrieval-Augmented Generation (RAG) is a technique that combines document retrieval with language models. It allows AI systems to search external knowledge sources before generating answers.
+
+Embeddings are vector representations of text that help AI systems understand semantic meaning. Vector databases such as FAISS are commonly used to store and search embeddings efficiently.
