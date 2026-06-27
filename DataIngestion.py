@@ -1,7 +1,7 @@
 from langchain_community.document_loaders import TextLoader
 from langchain_core.documents import Document
 
-loader=TextLoader('/home/basma/Documents/web scraping/Tools/video_resources.txt', encoding="utf8")
+loader=TextLoader('/home/basma/Documents/AI  Studying Assistant with LangGraph/Tools/video_resources.txt', encoding="utf8")
 documents=loader.load()
 print(documents)
 text = documents[0].page_content

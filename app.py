@@ -3,10 +3,10 @@ import warnings
 import logging
 import streamlit as st
 from uuid import uuid4
+import json
 
 from langchain_core.messages import HumanMessage, AIMessage
 from main import app
-
 
 
 # ===== CONFIG =====
@@ -194,8 +194,8 @@ if user_input:
         tool_result = result["messages"][-2].content
 
         try:
-            ai_content = eval(tool_result)
-        except:
+            ai_content = json.loads(tool_result)
+        except Exception:
             ai_content = tool_result
 
     messages.append({

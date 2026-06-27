@@ -2,14 +2,14 @@ import os
 import re
 from dotenv import load_dotenv
 from graphviz import Digraph
-from langchain_openrouter import ChatOpenRouter
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 load_dotenv()
 
-model = ChatOpenRouter(
-    model="openai/gpt-oss-120b:free",
+model = ChatGoogleGenerativeAI(
+    model="gemini-2.5-flash",
+    google_api_key=os.getenv("GEMINI_API_KEY"),
     temperature=0.3,
-    api_key=os.getenv("OPENROUTER_API_KEY"),
 )
 
 def generate_mindmap(text_file: str):
@@ -40,8 +40,40 @@ TEXT:
 {text}
 """
 
-    response = model.invoke(prompt)
-    output = response.content
+    try:
+        response = model.invoke(prompt)
+        output = response.content
+    except Exception as e:
+        print(f"LLM error: {e}, falling back to rule-based extraction")
+        # Fallback to rule-based extraction
+        relationships = []
+        sentences = re.split(r'[.!?]+', text)
+        sentences = [s.strip() for s in sentences if s.strip()]
+        
+        main_topic = sentences[0].split()[0] if sentences else "Topic"
+        main_topic = main_topic.capitalize()
+        relationships.append((main_topic, "Main Topic"))
+        
+        stop_words = {'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'must', 'shall', 'can', 'need', 'dare', 'ought', 'used', 'to', 'of', 'in', 'for', 'on', 'with', 'at', 'by', 'from', 'as', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'between', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 'just', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once'}
+        
+        for sentence in sentences[:10]:
+            words = sentence.split()
+            if len(words) >= 3:
+                for word in reversed(words):
+                    if word.lower() not in stop_words and len(word) > 2:
+                        object_ = word.capitalize()
+                        if object_ != main_topic:
+                            relationships.append((main_topic, object_))
+                            break
+        
+        seen = set()
+        unique_relationships = []
+        for rel in relationships:
+            if rel not in seen:
+                seen.add(rel)
+                unique_relationships.append(rel)
+        
+        output = "\n".join([f"{a} --> {b}" for a, b in unique_relationships])
 
     # ===== GRAPH =====
     g = Digraph("MindMap")

@@ -20,7 +20,7 @@ uploads_playlist = channel_response["items"][0]["contentDetails"]["relatedPlayli
 next_page_token = None
 index = 0
 
-with open("resources.txt", "w", encoding="utf-8") as f:
+with open("video_resources.txt", "w", encoding="utf-8") as f:
 
     while True:
 
